@@ -49,7 +49,7 @@
 #
 # Default IEEE libm
 #
-CFLAGS = -D_IEEE_LIBM 
+CFLAGS = -D_IEEE_LIBM -O
 
 CC = cc
 
@@ -98,13 +98,14 @@ obj = 	k_standard.o k_rem_pio2.o \
 	s_rint.o s_scalbn.o s_signgam.o s_significand.o s_sin.o \
 	s_tan.o s_tanh.o
 
-all: libm.a 
+LIB = libfdlibm.a
+all: $(LIB) 
 
-libm.a : $(obj) 
-	ar cru libm.a $(obj)
-	ranlib libm.a
+$(LIB) : $(obj) 
+	ar cru $(LIB) $(obj)
+	ranlib $(LIB)
 
 source: $(src) README
 
 clean: 
-	/bin/rm -f $(obj) a.out libm.a
+	/bin/rm -f $(obj) a.out $(LIB)
