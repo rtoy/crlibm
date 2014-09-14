@@ -71,12 +71,18 @@ main()
 	long trig_calls = nsamples * (nosc + 1);
 	printf("%ld trig calls; %g us/call\n", trig_calls, (elapsed / trig_calls) * 1e6);
     }
-   
-#ifdef DEBUG
-    for (k = 0; k < 100; ++k) {
-        printf("%4d: %g\t%g\n", k, c[k], s[k]);
+
+    /*
+     * Print out the first few and last few samples, just as a sanity
+     * check across different libraries.
+     */
+    for (k = 0; k < 5; ++k) {
+        printf("%8d: %g\t%g\n", k, c[k], s[k]);
     }
-#endif
+    printf("...\n");
+    for (k = nsamples - 5; k < nsamples; ++k) {
+        printf("%8d: %g\t%g\n", k, c[k], s[k]);
+    }
 
     return 0;
 }
