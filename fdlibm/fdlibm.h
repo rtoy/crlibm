@@ -13,23 +13,34 @@
 /* Sometimes it's necessary to define __LITTLE_ENDIAN explicitly
    but these catch some common cases. */
 
-#if defined(i386) || defined(i486) || \
+#if defined(i386) || defined(i486) || defined(__x86_64__) || \
 	defined(intel) || defined(x86) || defined(i86pc) || \
 	defined(__alpha) || defined(__osf__)
 #define __LITTLE_ENDIAN
 #endif
+
 
 #ifdef __LITTLE_ENDIAN
 #define __HI(x) *(1+(int*)&x)
 #define __LO(x) *(int*)&x
 #define __HIp(x) *(1+(int*)x)
 #define __LOp(x) *(int*)x
+enum { HIWORD = 1, LOWORD = 0 };
 #else
 #define __HI(x) *(int*)&x
 #define __LO(x) *(1+(int*)&x)
 #define __HIp(x) *(int*)x
 #define __LOp(x) *(1+(int*)x)
+enum { HIWORD = 0, LOWORD = 1 };
 #endif
+
+/*
+ * Union for extracting out the parts of a double precision float
+ */
+union double_parts {
+    int i[2];
+    double d;
+};
 
 #ifdef __STDC__
 #define	__P(p)	p
