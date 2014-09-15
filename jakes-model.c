@@ -33,7 +33,7 @@ init_model(int nosc, double doppler_freq)
         freq[k] = 2 * M_PI * doppler_freq * test_cos((2 * M_PI * k) / N);
     }
 
-#if 1
+#if 0
     for (k = 0; k <= nosc; ++k) {
         printf("%4d: %g\t%g\t%g\n", k, cos_beta[k], sin_beta[k], freq[k]);
     }
