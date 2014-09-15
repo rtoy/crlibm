@@ -1,23 +1,10 @@
 #include <stdlib.h>
-#if !(defined(USE_CRLIBM) || defined(USE_FDLIBM))
 #include <math.h>
+#if !(defined(USE_CRLIBM) || defined(USE_FDLIBM))
 #endif
 
-#ifdef USE_CRLIBM
-#include "crlibm.h"
-#define sin(x) sin_rn(x)
-#define cos(x) cos_rn(x)
-#endif
-
-#ifdef USE_FDLIBM
-#include "fdlibm.h"
-#endif
-
-#ifndef M_SQRT2
-#define	M_SQRT2 (1.4142135623730951e0)
-#define	M_PI	(3.141592653589793e0)
-extern double sqrt(double);
-#endif
+extern double test_sin(double);
+extern double test_cos(double);
 
 /* Number of oscillators */
 double *cos_beta;
@@ -34,19 +21,19 @@ init_model(int nosc, double doppler_freq)
     sin_beta = malloc((nosc + 1) * sizeof(*sin_beta));
     freq = malloc((nosc + 1) * sizeof(*freq));
 
-    cos_beta[0] = M_SQRT2 * cos(M_PI / 4);
-    sin_beta[0] = M_SQRT2 * sin(M_PI / 4);
+    cos_beta[0] = M_SQRT2 * test_cos(M_PI / 4);
+    sin_beta[0] = M_SQRT2 * test_sin(M_PI / 4);
     freq[0] = 2 * M_PI * doppler_freq;
     
     for (k = 1; k <= nosc; ++k) {
         double beta = M_PI * k / nosc;
         
-        cos_beta[k] = 2 * cos(beta);
-        sin_beta[k] = 2 * sin(beta);
-        freq[k] = 2 * M_PI * doppler_freq * cos(2 * M_PI * k / N);
+        cos_beta[k] = 2 * test_cos(beta);
+        sin_beta[k] = 2 * test_sin(beta);
+        freq[k] = 2 * M_PI * doppler_freq * test_cos((2 * M_PI * k) / N);
     }
 
-#if 0
+#if 1
     for (k = 0; k <= nosc; ++k) {
         printf("%4d: %g\t%g\t%g\n", k, cos_beta[k], sin_beta[k], freq[k]);
     }
@@ -65,7 +52,7 @@ jakes_model(double *c, double* s, double t, double tstep, int nsamples, int nosc
         double sum_s = 0;
 
         for (n = 0; n <= nosc; ++n) {
-            double ct = cos(freq[n] * t);
+            double ct = test_cos(freq[n] * t);
         
             sum_c += cos_beta[n] * ct;
             sum_s += sin_beta[n] * ct;
